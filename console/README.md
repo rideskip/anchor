@@ -17,16 +17,50 @@ ability to store command definitions in program memory (instead of RAM)
 
 ## Usage
 
-The first step is to define a console command and implement its handler. The
-easiest way to do this is by using the `CONSOLE_COMMAND_DEF()` macro (see the
-example below). During program initialization, `console_init()` should be
-called to initialize the console library, and each command should be registered
-with the console library using `console_command_register()`.
+The first step is to define a console command and implement its handler. During
+program initialization, `console_init()` should be called to initialize the
+console library, and each command should be registered with the console library
+using `console_command_register()`.
 
 When the program receives data which should be interpreted by the console
 library, it should be passed to `console_process()`. Note that the data passed
 may contain a partial, complete, or even multiple commands. As part of this
 call, the console library will call the command handlers, as appropriate.
+
+### Defining Commands
+
+To define a new console command, the `CONSOLE_COMMAND_DEF(CMD, DESC, ...)`
+macro should be used (omit the `DESC` argument if the `CONSOLE_HELP_COMMAND`
+option is not enabled).
+* `CMD` is the name of the console command, and must be a valid C symbol name.
+* `DESC` should be specified if the `CONSOLE_HELP_COMMAND` option is set, and
+should be a string which describes the command for use by the `help` command.
+* `...` should consist of 0 or more argument definitions (see below).
+
+Arguments are defined as part of a console command definition with the help of
+one of the following macros (omit the `DESC` argument if the
+`CONSOLE_HELP_COMMAND` option is not enabled). The `NAME` argument must be a
+valid C symbol name.
+* `CONSOLE_INT_ARG_DEF(NAME, DESC)` - Defines a required integer argument.
+* `CONSOLE_STR_ARG_DEF(NAME, DESC)` - Defines a required string argument.
+* `CONSOLE_OPTIONAL_INT_ARG_DEF(NAME, DESC)` - Defines an optional integer
+argument (can only be used for the last argument).
+* `CONSOLE_OPTIONAL_STR_ARG_DEF(NAME, DESC)` - Defines an optional string
+argument (can only be used for the last argument).
+
+The `CONSOLE_COMMAND_DEF()` macro will forward declare a handler for the
+console command with the following prototype:
+`static void <CMD>_command_handler(const <CMD>_args_t* args);`. This function
+will be called whenver the console command is invoked, with the `args` argument
+containing the validated, parsed, and appropriately typed (`intptr_t` /
+`const char*`) arguments. For optional arguments, a default value of `-1` /
+`NULL` will be set for integer / string arguments respectively.
+
+### Initializing the Library and Registering Commands
+
+The `console_init()` function should be called before registering any commands
+to initialize the console library. Console commands can be registered at any
+time afterwards using the `console_command_register(CMD)` function.
 
 ## Compile Options
 
@@ -39,8 +73,9 @@ console library (default of 128).
 * `CONSOLE_PROMPT` - The string displayed to prompt for console input (default
 of "> ").
 * `CONSOLE_BUFFER_ATTRIBUTES` - Extra GCC attributes to add to the internal
-buffers used by the console library (default of none). This can be used to if
-these buffers should be placed in a different linker section, for example.
+buffers used by the console library (default of none). As an example, this can
+be used in cases where these buffers should be placed in a different linker
+section.
 * `CONSOLE_HELP_COMMAND` - Enables the built-in help command (default of 1).
 This can be disabled to save code space. Disabling this will also remove the
 `desc` attribute of commands and arguments.
@@ -77,23 +112,12 @@ CONSOLE_COMMAND_DEF(gpio_get, "Gets a GPIO pin value",
     CONSOLE_INT_ARG_DEF("pin", "The pin <0-15>")
 );
 
-static void gpio_set_command_handler(void) {
-    const char* port;
-    int pin, value;
-    console_command_get_str_arg("port", &port);
-    console_command_get_int_arg("pin", &pin);
-    console_command_get_int_arg("value", &value);
-
-    gpio_write(port, pin, value);
+static void gpio_set_command_handler(const gpio_set_args_t* args) {
+    gpio_write(args->port, args->pin, args->value);
 }
 
-static void gpio_get_command_handler(void) {
-    const char* port;
-    int pin;
-    console_command_get_str_arg("port", &port);
-    console_command_get_int_arg("pin", &pin);
-
-    printf("value=%d", gpio_read(port, pin));
+static void gpio_get_command_handler(const gpio_get_args_t* args) {
+    printf("value=%d", gpio_read(args->port, args->pin));
 }
 
 void main(void) {

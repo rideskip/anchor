@@ -2,7 +2,11 @@
 
 #include <inttypes.h>
 
+#ifdef __SDCC_VERSION_MAJOR
+#define _FSM_CONTEXT_SIZE (sizeof(uintptr_t) + sizeof(uint8_t))
+#else
 #define _FSM_CONTEXT_SIZE (sizeof(uintptr_t) * 2)
+#endif
 
 typedef struct {
     const char* name;
