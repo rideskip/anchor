@@ -3,6 +3,14 @@
 #include <inttypes.h>
 #include <stdbool.h>
 
+#ifdef _MSC_VER
+#define _LOGGING_FORMAT_ATTR
+#define _LOGGING_USED_ATTR
+#else
+#define _LOGGING_FORMAT_ATTR __attribute__((format(printf, 5, 6)))
+#define _LOGGING_USED_ATTR __attribute__((used))
+#endif
+
 // The maximum length of a log message (not including extra formatting)
 #ifndef LOGGING_MAX_MSG_LENGTH
 #define LOGGING_MAX_MSG_LENGTH 128
@@ -56,12 +64,14 @@ typedef struct {
 
 // Internal implementation macros / functions which are called via the macros above
 #define _LOG_LEVEL_IMPL(LEVEL, ...) logging_log_impl(&_logging_logger, LEVEL, FILENAME, __LINE__, __VA_ARGS__)
-void logging_log_impl(logging_logger_t* logger, logging_level_t level, const char* file, int line, const char* fmt, ...) __attribute__((format(printf, 5, 6)));
+void logging_log_impl(logging_logger_t* logger, logging_level_t level, const char* file, int line, const char* fmt, ...) _LOGGING_FORMAT_ATTR;
 void logging_set_level_impl(logging_logger_t* logger, logging_level_t level);
 
 // Per-file context object which we should create
-static logging_logger_t _logging_logger __attribute__((used)) = {
+static logging_logger_t _logging_logger _LOGGING_USED_ATTR = {
 #ifdef LOGGING_MODULE_NAME
     .module_prefix = LOGGING_MODULE_NAME ":",
+#else
+    .module_prefix = 0,
 #endif
 };

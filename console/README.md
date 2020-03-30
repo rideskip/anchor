@@ -102,14 +102,14 @@ These tests are built using
 #include "anchor/console/console.h"
 
 CONSOLE_COMMAND_DEF(gpio_set, "Sets a GPIO pin",
-    CONSOLE_STR_ARG_DEF("port", "The port <A,B,C>"),
-    CONSOLE_INT_ARG_DEF("pin", "The pin <0-15>"),
-    CONSOLE_INT_ARG_DEF("value", "The value <0-1>")
+    CONSOLE_STR_ARG_DEF(port, "The port <A,B,C>"),
+    CONSOLE_INT_ARG_DEF(pin, "The pin <0-15>"),
+    CONSOLE_INT_ARG_DEF(value, "The value <0-1>")
 );
 
 CONSOLE_COMMAND_DEF(gpio_get, "Gets a GPIO pin value",
-    CONSOLE_STR_ARG_DEF("port", "The port <A,B,C>"),
-    CONSOLE_INT_ARG_DEF("pin", "The pin <0-15>")
+    CONSOLE_STR_ARG_DEF(port, "The port <A,B,C>"),
+    CONSOLE_INT_ARG_DEF(pin, "The pin <0-15>")
 );
 
 static void gpio_set_command_handler(const gpio_set_args_t* args) {
