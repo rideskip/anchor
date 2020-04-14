@@ -1,0 +1,23 @@
+syntax = "proto2";
+
+import "google/protobuf/descriptor.proto";
+
+enum AttrOps {
+    ATTR_OPS_INVALID = 0;
+    ATTR_OPS_R = 0x1000;
+    ATTR_OPS_W = 0x2000;
+    ATTR_OPS_N = 0x4000;
+    ATTR_OPS_RW = 0x3000;
+    ATTR_OPS_RN = 0x5000;
+    ATTR_OPS_WN = 0x6000;
+    ATTR_OPS_RWN = 0x7000;
+}
+
+message SonarOptions {
+    // Operations which a SONAR attribute supports
+    optional AttrOps attr_ops = 1 [default = ATTR_OPS_INVALID];
+}
+
+extend google.protobuf.MessageOptions {
+    optional SonarOptions sonar_msgopt = 9910;
+}

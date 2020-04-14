@@ -1,0 +1,15 @@
+#pragma once
+
+#include <inttypes.h>
+
+#define SONAR_APPLICATION_ATTRIBUTE_ID_ATTRIBUTE_ID_MASK    0x0fff
+#define SONAR_APPLICATION_ATTRIBUTE_ID_OP_MASK              0xf000
+#define SONAR_APPLICATION_ATTRIBUTE_ID_OP_OFFSET            12
+#define SONAR_APPLICATION_ATTRIBUTE_ID_OP_READ              (1 << SONAR_APPLICATION_ATTRIBUTE_ID_OP_OFFSET)
+#define SONAR_APPLICATION_ATTRIBUTE_ID_OP_WRITE             (2 << SONAR_APPLICATION_ATTRIBUTE_ID_OP_OFFSET)
+#define SONAR_APPLICATION_ATTRIBUTE_ID_OP_NOTIFY            (3 << SONAR_APPLICATION_ATTRIBUTE_ID_OP_OFFSET)
+
+
+typedef struct {
+    uint16_t attribute_id;
+} sonar_application_layer_header_t;
