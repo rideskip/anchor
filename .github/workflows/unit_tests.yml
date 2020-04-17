@@ -1,0 +1,21 @@
+name: Unit Tests
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    container:
+      image: docker://srzzumix/googletest:latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Run Sonar Unit Tests
+        working-directory: ./sonar/tests
+        run: make
+      - name: Run Console Unit Tests
+        working-directory: ./console/tests
+        run: make

@@ -18,6 +18,8 @@ static uint32_t logging_time_ms_function(void) {
 int main(int argc, char **argv) {
   const logging_init_t init_logging = {
     .write_function = logging_write_function,
+    .raw_write_function = nullptr,
+    .lock_function = nullptr,
     .time_ms_function = logging_time_ms_function,
     .default_level = LOGGING_LEVEL_DEBUG,
   };

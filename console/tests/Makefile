@@ -20,9 +20,22 @@ OBJECTS := $(addprefix $(BUILD_DIR)/,$(notdir $(CXX_SOURCES:.cpp=.o))) $(addpref
 vpath %.c $(sort $(dir $(C_SOURCES)))
 vpath %.cpp $(sort $(dir $(CXX_SOURCES)))
 
-CFLAGS := $(CXX_INCLUDES) -g3 -Wno-extern-c-compat -Werror $(addprefix -D,$(C_DEFS))
-LDFLAGS := -lgtest
+CFLAGS := $(CXX_INCLUDES) -g3 -Werror $(addprefix -D,$(C_DEFS))
+CPP_FLAGS :=
+LDFLAGS := -lgtest -lpthread
 
+ifeq ($(OS),Windows_NT)
+$(error "Windows is not currently supported")
+else
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+# Likely using clang
+CFLAGS += -Wno-extern-c-compat
+CPP_FLAGS += -std=c++14
+else
+CPP_FLAGS += -D_Static_assert=static_assert
+endif
+endif
 
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR)
 	@echo "Compiling $(notdir $@)"
@@ -30,11 +43,11 @@ $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR)
 
 $(BUILD_DIR)/%.o: %.cpp Makefile | $(BUILD_DIR)
 	@echo "Compiling $(notdir $@)"
-	@$(CXX) -c $(CFLAGS) -std=c++14 -MD -MF"$(@:%.o=%.d)" $< -o $@
+	@$(CXX) -c $(CFLAGS) $(CPP_FLAGS) -MD -MF"$(@:%.o=%.d)" $< -o $@
 
 $(BUILD_DIR)/$(TARGET): $(OBJECTS) Makefile | $(BUILD_DIR)
 	@echo "Linking $(notdir $@)"
-	@$(CXX) $(LDFLAGS) $(OBJECTS) -o $@
+	@$(CXX) $(OBJECTS) -o $@ $(LDFLAGS)
 
 $(BUILD_DIR):
 	@mkdir -p $@

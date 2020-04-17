@@ -29,14 +29,13 @@ OPT :=
 
 CC := gcc
 CXX := g++
-AR := ar
 
 OBJECTS := $(addprefix $(BUILD_DIR)/,$(notdir $(CXX_SOURCES:.cpp=.o))) $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
 vpath %.c $(sort $(dir $(C_SOURCES)))
 vpath %.cpp $(sort $(dir $(CXX_SOURCES)))
 
 CFLAGS := $(CXX_INCLUDES) -g3 -Wno-extern-c-compat -Werror
-LDFLAGS := -lgtest
+LDFLAGS := -lgtest -lpthread
 
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR)
 	@echo "Compiling $(notdir $@)"
@@ -48,7 +47,7 @@ $(BUILD_DIR)/%.o: %.cpp Makefile | $(BUILD_DIR)
 
 $(BUILD_DIR)/$(TARGET): $(OBJECTS) Makefile | $(BUILD_DIR)
 	@echo "Linking $(notdir $@)"
-	@$(CXX) $(LDFLAGS) $(OBJECTS) -o $@
+	@$(CXX) $(OBJECTS) -o $@ $(LDFLAGS)
 
 $(BUILD_DIR):
 	@mkdir -p $@

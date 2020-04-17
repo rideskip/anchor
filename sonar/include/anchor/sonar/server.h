@@ -18,6 +18,7 @@
 #define SONAR_SERVER_DEF(NAME, MAX_ATTR_SIZE) \
     static uint8_t _##NAME##_receive_buffer[MAX_ATTR_SIZE + 6 /* protocol overhead */]; \
     static struct sonar_server_context _##NAME##_context = { \
+        ._private = {0}, \
         .receive_buffer = _##NAME##_receive_buffer, \
         .receive_buffer_size = sizeof(_##NAME##_receive_buffer), \
     }; \
@@ -30,6 +31,7 @@
 #define SONAR_SERVER_ATTR_DEF_NO_PROTOTYPES(ATTR_NAME, VAR_NAME, ID, MAX_SIZE, OPS) \
     SONAR_ATTR_DEF(_##VAR_NAME##_attr, ID, MAX_SIZE, OPS); \
     static struct sonar_server_attribute _##VAR_NAME##_server_attr = { \
+        ._private = {0}, \
         .attr = _##VAR_NAME##_attr, \
         .read_handler = ATTR_NAME##_read_handler, \
         .write_handler = ATTR_NAME##_write_handler, \

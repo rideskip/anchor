@@ -17,6 +17,7 @@
 #define SONAR_CLIENT_DEF(NAME, MAX_ATTR_SIZE) \
     static uint8_t _##NAME##_receive_buffer[MAX_ATTR_SIZE + 6]; \
     static sonar_client_context_t _##NAME##_context = { \
+        ._private = {0}, \
         .receive_buffer = _##NAME##_receive_buffer, \
         .receive_buffer_size = sizeof(_##NAME##_receive_buffer), \
     }; \

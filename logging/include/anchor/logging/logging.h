@@ -3,6 +3,10 @@
 #include <inttypes.h>
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef _MSC_VER
 #define _LOGGING_FORMAT_ATTR
 #define _LOGGING_USED_ATTR
@@ -69,9 +73,14 @@ void logging_set_level_impl(logging_logger_t* logger, logging_level_t level);
 
 // Per-file context object which we should create
 static logging_logger_t _logging_logger _LOGGING_USED_ATTR = {
+    ._private = {0},
 #ifdef LOGGING_MODULE_NAME
     .module_prefix = LOGGING_MODULE_NAME ":",
 #else
     .module_prefix = 0,
 #endif
 };
+
+#ifdef __cplusplus
+}
+#endif

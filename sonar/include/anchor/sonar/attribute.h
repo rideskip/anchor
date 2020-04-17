@@ -53,6 +53,7 @@ struct sonar_attribute_def {
     static uint8_t _##NAME##_request_buffer[(MAX_SIZE) ? (MAX_SIZE) : 1] SONAR_ATTR_BUFFER_ATTRIBUTES; \
     static uint8_t _##NAME##_response_buffer[(MAX_SIZE) ? (MAX_SIZE) : 1] SONAR_ATTR_BUFFER_ATTRIBUTES; \
     static sonar_attribute_def_t _##NAME##_def = { \
+        ._private = {0}, \
         .attribute_id = ID, \
         .max_size = MAX_SIZE, \
         .ops = SONAR_ATTRIBUTE_OPS_##OPS, \

@@ -14,7 +14,7 @@ the unit of data which is sent (as a read / write / notify request) between the
 client and server.
 
 It's recommended (but not strictly required) to use
-(protobuf)[https://developers.google.com/protocol-buffers] for defining
+[protobuf](https://developers.google.com/protocol-buffers) for defining
 attributes. The SONAR library includes a plugin which makes it easy to use
 such attributes with SONAR. Note that SONAR attributes need to have a known
 max size, so it's suggested to also use the appropriate properties of a
@@ -23,7 +23,7 @@ protobuf implementation such as [nanopb](https://github.com/nanopb/nanopb).
 ### Protobuf Extensions
 
 When defining a protobuf message for an attribute, the extensions defined in
-(sonar_extensions.proto)[protobuf/sonar_extensions.proto] should be added. For
+[sonar_extensions.proto](protobuf/sonar_extensions.proto) should be added. For
 example, to define a `DeviceInfo` attribute with attribute ID `0x264` which
 supports read and notify requests:
 ```protobuf
@@ -243,7 +243,7 @@ void sonar_client_task(void) {
         uint8_t rx_buffer[64];
         uint32_t rx_len = serial_read(rx_buffer, sizeof(rx_buffer));
         sonar_client_process(m_client, rx_buffer, rx_len);
-        if (/* should write to TEST_ATTR */) {
+        if (/* should read TEST_ATTR */) {
             sonar_client_read(m_client, SONAR_PROTO_ATTR(Sonar_DeviceInfo));
         }
         // ...
