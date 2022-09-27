@@ -61,8 +61,6 @@ typedef struct {
         _CONSOLE_MAP(_CONSOLE_ARG_TYPE_WITH_DESC_HELPER, ##__VA_ARGS__) \
         const void* const __dummy; /* dummy entry so the struct isn't empty */ \
     } CMD##_args_t; \
-    _Static_assert(sizeof(CMD##_args_t) == (_CONSOLE_NUM_ARGS(__VA_ARGS__) + 1) * sizeof(void *), \
-        "Compiler created *_args_t struct of unexpected size"); \
     static void CMD##_command_handler(const CMD##_args_t* args); \
     static const console_arg_def_t _##CMD##_ARGS_DEF[] = { \
         _CONSOLE_MAP(_CONSOLE_ARG_DEF_WITH_DESC_HELPER, ##__VA_ARGS__) \
@@ -76,7 +74,10 @@ typedef struct {
         .num_args = sizeof(_##CMD##_ARGS_DEF) / sizeof(console_arg_def_t), \
         .args_ptr = _##CMD##_ARGS, \
     }; \
-    static const console_command_def_t* const CMD = &_##CMD##_DEF
+    static const console_command_def_t* const CMD = &_##CMD##_DEF; \
+    typedef int static_assert_console_##CMD[(sizeof(CMD##_args_t) \
+        == (_CONSOLE_NUM_ARGS(__VA_ARGS__) + 1) * sizeof(void *)) ? 1 : -1];
+    // Last assertion fails if compiler created *_args_t struct of unexpected size
 #else
 #define CONSOLE_COMMAND_DEF(CMD, ...) \
     static void CMD##_command_handler(void); \
