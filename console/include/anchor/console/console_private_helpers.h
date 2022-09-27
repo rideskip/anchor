@@ -40,6 +40,11 @@ typedef int static_assert_console_num_args_3[_CONSOLE_NUM_ARGS(1,2,3,4,5,6,7,8,9
 #define _CONSOLE_ARG_DEF_HELPER(...) _CONSOLE_ARG_DEF_HELPER2 __VA_ARGS__
 #define _CONSOLE_ARG_DEF_HELPER2(NAME, DESC, ENUM_TYPE, IS_OPTIONAL, C_TYPE) \
     { .name = #NAME, .type = ENUM_TYPE, .is_optional = IS_OPTIONAL },
+
+#define _CONSOLE_ARG_DEF_NO_HELPER(...) _CONSOLE_ARG_DEF_NO_HELPER2 __VA_ARGS__
+#define _CONSOLE_ARG_DEF_NO_HELPER2(NAME, ENUM_TYPE, IS_OPTIONAL, C_TYPE) \
+    { .name = #NAME, .type = ENUM_TYPE, .is_optional = IS_OPTIONAL },
+
 #define _CONSOLE_ARG_DEF_WITH_DESC_HELPER(...) _CONSOLE_ARG_DEF_WITH_DESC_HELPER2 __VA_ARGS__
 #define _CONSOLE_ARG_DEF_WITH_DESC_HELPER2(NAME, DESC, ENUM_TYPE, IS_OPTIONAL, C_TYPE) \
     { .name = #NAME, .desc = DESC, .type = ENUM_TYPE, .is_optional = IS_OPTIONAL },
@@ -47,6 +52,10 @@ typedef int static_assert_console_num_args_3[_CONSOLE_NUM_ARGS(1,2,3,4,5,6,7,8,9
 // Helper macros for defining command *_arg_t types.
 #define _CONSOLE_ARG_TYPE_WITH_DESC_HELPER(...) _CONSOLE_ARG_TYPE_WITH_DESC_HELPER2 __VA_ARGS__
 #define _CONSOLE_ARG_TYPE_WITH_DESC_HELPER2(NAME, DESC, ENUM_TYPE, IS_OPTIONAL, C_TYPE) \
+    C_TYPE NAME;
+
+#define _CONSOLE_ARG_TYPE_NO_DESC_HELPER(...) _CONSOLE_ARG_TYPE_NO_DESC_HELPER2 __VA_ARGS__
+#define _CONSOLE_ARG_TYPE_NO_DESC_HELPER2(NAME, ENUM_TYPE, IS_OPTIONAL, C_TYPE) \
     C_TYPE NAME;
 
 #else // !defined(__GNUC__)
