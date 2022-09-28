@@ -1,3 +1,7 @@
+## THIS REPOSITORY IS NO LONGER MAINTAINED
+
+[This fork](https://github.com/bgomberg/anchor) should be considered the primary fork at this point and has a few changes / fixes versus what's in this repository and is being actively maintained by the original author of this repository.
+
 # Anchor
 
 Anchor is a collection of various embedded firmware libraries developed by Skip
